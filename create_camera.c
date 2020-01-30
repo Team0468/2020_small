@@ -18,7 +18,7 @@ int full_check(int c){
         a=a+1;
     }
     if(b>10){printf("i see color");
-        return 1;}
+             return 1;}
     else{printf("i dont see color");
          return 0;}
 }
@@ -32,4 +32,11 @@ int camera_center(int color){
         return 1;
     }
     else{return 0;}
+}
+int y1,y2,y3,g1,g2,g3,g4,r1,r2,r3,r4 = initial;
+int block_check(){
+    camera_initialize();
+    if (full_check(yellow)==1){
+    }
+    else {y1=-1;}
 }
