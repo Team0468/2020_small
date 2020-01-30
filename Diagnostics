@@ -44,8 +44,8 @@ set_servo_position(arm, 300);
 set_servo_position(arm, 500);
 //check if squared up
 
-square_up(black,800);
-printf("check if im squared up");
+//square_up(black,800);
+//printf("check if im squared up");
 
 
 
