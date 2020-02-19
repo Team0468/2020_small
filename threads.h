@@ -1,5 +1,15 @@
 void big_block();
+void big_block2();
 void lift_arm_up();
 void lower_arm();
 void gyro();
 void raise_arm();
+void claw_open();
+void claw_close_pull();
+void lower_arm_2();
+void claw_open2();
+void arm_water();
+void claw_waterC();
+void arm_water2();
+void block_raise();
+void block_lower();

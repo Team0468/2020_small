@@ -9,7 +9,7 @@ void stop_1();
 //slowed down versions of set servo^^^
 void servo(int port, int position, int speed);
 void move(int l_speed,int r_speed);
-void move_time(int time);
+
 //basic move function using mav^^^
 int extraction();
 int white;

@@ -3,116 +3,54 @@
 #include <threads.h>
 #include <variables.h>
 #include <run_sections.h>
-#include <Tyler_gyro.h>
+
 void lift_arm_up(){
-    servo(arm,arm_block,2);
+    servo(arm,arm_block+100,2);
 }
 void lower_arm(){
-    msleep(1000);
-    servo(arm,arm_block,fast);
+    msleep(1500);
+    servo(arm,arm_min,fast);
 }
 void raise_arm(){
     servo(arm,arm_max,fast);
 }
 void big_block(){
-	servo(arm,arm_bigblock,slow);   
+	servo(arm,arm_bigblock,slow+1);   
 }
-void gyro(){
-
-    float kp = 0.0004;// start adjusting this (smaller increments = more acurate)
-    float ki = 0;
-    float kd = 1;
-
-    float currentL = 0;
-    float currentR = 0;
-    float circ = 5 * 3.141592653589;
-	//float baseL = 50;
-    //float baseR = 50;
-    int base = 60;
-    float integralActiveZone = ((1*12/circ)*360);
-
-
-
-
-    while(1){
-        float errorL = ((bias * 12 / circ) * 360 ) - gyro_z();
-        float errorR = ((bias * 12 / circ) * 360 ) - gyro_z();
-        if (errorL < integralActiveZone && errorL != 0){
-
-            errorTl += errorL;
-
-        }
-        else{
-
-            errorTl = 0;
-
-        }
-        if(errorR < (( integralActiveZone * 12 / circ ) * 360) && errorR != 0){
-
-            errorR += errorR;
-
-        }
-        else{
-
-            errorTr = 0;
-
-        }
-        if(errorTl > 50 / ki){
-
-            errorTl = 50 / ki;
-
-        }
-        if(errorTr > 50 / ki){
-
-            errorTr = 50 / ki;
-
-        }
-        if(errorL == 0){
-
-            derivativeL = 0;
-
-        }
-        if(errorR == 0){
-
-            derivativeR = 0;
-
-        }
-
-        proportionL = errorL * kp;
-        proportionR = errorR * kp;
-        integralL = errorTl * ki;
-        integralR = errorTr * ki;
-        derivativeL = (errorR - lastErrorL) * kd;
-        derivativeR = (errorL - lastErrorR) * kd;
-
-        lastErrorL = errorL;
-        lastErrorR = errorR;
-
-		
-
-        currentR = proportionR + integralR + derivativeR;
-        currentL = proportionL + integralL + derivativeL;
-
-		baseL = base + currentL;
-        baseR = base + currentR;
-
-        if (currentL == 0 && currentR == 0){
-
-            currentR = 0;
-            currentL = 0;
-
-        }
-        if(currentL < 0){
-
-            currentL = 0;
-
-        }
-        if(currentR < 0){
-
-            currentR = 0;
-
-        }
-        msleep(20);
-    }
+void claw_open(){
+    msleep(1275);
+    servo(claw,claw_max,fast);
+}
+void claw_close_pull(){
+    msleep(500);
+    servo(claw,claw_min,slow);
+}
+void lower_arm_2(){
+ servo(arm,arm_min,fast);   
+}
+void claw_open2(){
+    servo(claw,claw_max,slow+1);
+}
+void big_block2(){
+    servo(arm,arm_bigblock,slow);
+}
+void arm_water(){
+    msleep(400);
+    servo(arm,arm_max,fast);
+    
+}
+void arm_water2(){
+    servo(arm,arm_max-272,slow);
+}
+void claw_waterC(){
+    servo(claw,claw_min,slow+1);
+}
+void block_raise(){
+    msleep(600);
+    servo(arm,arm_block+70,slow);
+}
+void block_lower(){
+    msleep(100);
+    servo(arm,arm_min+358,slow);
 }
 //all thread functions for main and seperate voids and int's

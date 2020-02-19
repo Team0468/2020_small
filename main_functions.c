@@ -4,7 +4,7 @@
 #include <variables.h>
 #include <run_sections.h>
 #include <filter.h>
-#include <Tyler_gyro.h>
+
 //This file was made by Tyler Maenza, Jacob Ross and with help from multiple coders.
 
 void stop_1(){
@@ -518,21 +518,7 @@ void starting_pos(){
 
 }
 
-void move_time(int time){
 
-    float elapsed_time;
-    float init_time = seconds();
-
-    while(elapsed_time < time){
-
-        gyro();
-
-        mav(right_motor,currentR);
-        mav(left_motor,currentL);
-        elapsed_time = seconds() - init_time;
-    }
-
-}
 void work_here(){
 //void servo(int port, int position, int speed)
 servo(claw,claw_max,3);
