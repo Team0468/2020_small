@@ -1,11 +1,17 @@
-float init_time;//put these floats as global variables
-float elapsed;
-int timer_reset()//put this above the while loop
-{
-    init_time=seconds();
+#include <timer.h>
+#include <kipr/botball.h>
+float time_arr[6];
+
+void reset_timer(int ind){
+    time_arr[ind]=seconds();
 }
-int time_calc()//put this at the end of the while loop ex.  while(){ your_code time_calc}
-{
-    elapsed = seconds()-init_time;
-    return elapsed;
+void reset_sys_timer(){
+    time_arr[0]=seconds();
+}
+float sys_timer(){
+    if(time_arr[0]==0){reset_sys_timer();}
+    return seconds()-time_arr[0];
+}
+int timer(int ind){
+    return seconds()-time_arr[ind];
 }

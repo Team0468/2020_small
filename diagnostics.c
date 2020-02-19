@@ -3,7 +3,7 @@
 #include <threads.h>
 #include <variables.h>
 #include <run_sections.h>
-#include <Tyler_gyro.h>
+
 /*
 
 int diagnostics()
