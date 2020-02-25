@@ -5,8 +5,8 @@
 #include <run_sections.h>
 #include <timer.h>
 //time/sections of the run as a whole for ease of finding the section desired
-#define back  (-70)
-#define forward 70
+#define back  (-85)
+#define forward 85
 int counter = 0;
 int stop, back_claw = 0;
 int left_motor_move();
@@ -16,6 +16,12 @@ int back_bound = 5;
 int back_arm_move();
 int down = .5*back;
 int hand();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// extraction() begins in the starting box                                                               ///
+/// facing the beginning of the ramp in line with the first yellow cube                    ///
+/// extraction() ends after the first yellow cube is lifted                                          ///
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int extraction()
 {
     reset_timer(5);
@@ -23,7 +29,7 @@ int extraction()
     while (digital(left_motor) ==0 || digital(right_motor)==0){//original
         digital(left_motor)==0 ? left_motor_move(back) : left_motor_move(stop);
         digital(right_motor)==0 ? right_motor_move(back) : right_motor_move(stop);
-      if(timer(5)> 2){break;}  
+      if(timer(5)> 1){break;}  
     }
     
 
@@ -42,7 +48,7 @@ int extraction()
     cmpc(back_claw);
     reset_timer(1);
     
-    while(gmpc(back_claw) < 280 && timer(1) < 2){//closing back claw
+    while(gmpc(back_claw) < 260 && timer(1) < 1){//closing back claw
 
         hand(down*(-1));
 
@@ -51,7 +57,7 @@ int extraction()
     hand(stop);
     cmpc(back_port);
     reset_timer(2);
-    while(analog(back_bound) < 2000 && timer(2) < 2){
+    while(analog(back_bound) < 2000 && timer(2) < 1){
         back_arm_move(forward);
 
     }
@@ -59,19 +65,26 @@ int extraction()
     back_arm_move(stop);
     off(back_port);
 	off(back_claw);
-    msleep(300);
-    hand(stop);
+    
+    
     return water_contain();   
 
 
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// extraction_2() begins at the extraction of the second yellow cube                                      ///
+/// facing the middle of the ramp in line with the second yellow cube                                      ///
+/// while extraction_2() is happening the other claw is holding 1 green cubes                        ///
+/// extraction_2() ends at the second extraction of the big yellow cube                                  ///
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int extraction_2()
 {
     reset_timer(5);
     while (digital(left_motor) ==0 || digital(right_motor)==0){//original
         digital(left_motor)==0 ? left_motor_move(back) : left_motor_move(stop);
         digital(right_motor)==0 ? right_motor_move(back) : right_motor_move(stop);
-        if(timer(5)>2){break;}
+        if(timer(5)>1){break;}
     }
     move(0,0);
 
@@ -88,7 +101,7 @@ int extraction_2()
     hand(stop);
     cmpc(back_claw);
     reset_timer(1);
-    while(gmpc(back_claw) < 280 && timer(1) < 2){//closing back claw
+    while(gmpc(back_claw) < 260 && timer(1) < 1){//closing back claw
 
         hand(down*(-1));
 
@@ -96,26 +109,32 @@ int extraction_2()
     hand(stop);
     cmpc(back_port);
     reset_timer(2);
-    while(analog(back_bound) < 2000 && timer(2) < 2){
+    while(analog(back_bound) < 2000 && timer(2) < 1){
         back_arm_move(forward);
 
     }
     back_arm_move(stop);
     off(back_claw);
     off(back_port);
-    msleep(300);
-    hand(stop);
+   
     return delivery();
 
 
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// extraction_3() begins at the extraction of the third yellow cube                     ///
+// while extraction_3() is going on the other claw is holding 2 red cubes          ///
+// facing the end of the ramp in line with the third yellow cube                          ///
+// extraction_3() ends when the yellow cube is lifted                                        ///
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int extraction_3()
 {
     reset_timer(5);
     while (digital(left_motor) ==0 || digital(right_motor)==0){//original
         digital(left_motor)==0 ? left_motor_move(back) : left_motor_move(stop);
         digital(right_motor)==0 ? right_motor_move(back) : right_motor_move(stop);
-        if(timer(5)>2){break;}
+        if(timer(5)>1){break;}
     }
     move(0,0);
 
@@ -131,7 +150,7 @@ int extraction_3()
     off(back_port);
     cmpc(back_claw);
     reset_timer(1);
-    while(gmpc(back_claw) < 280 && timer(1) < 2){//closing back claw
+    while(gmpc(back_claw) < 260 && timer(1) < 1){//closing back claw
 
         hand(down*(-1));
 
@@ -140,14 +159,13 @@ int extraction_3()
     
     cmpc(back_port);
     reset_timer(2);
-    while(analog(back_bound) < 2000 && timer(2) < 2){
+    while(analog(back_bound) < 2000 && timer(2) < 1){
         back_arm_move(forward);
     }
 
     back_arm_move(stop);
     off(back_claw);
-    msleep(300);
-    hand(stop);
+    
     
     off(back_port);
     return delivery_2();
@@ -161,15 +179,15 @@ int hand(int speed){motor(back_claw,speed); return 1;};
 
 int water_contain(){
 
-    Drive(3600,80);
+    Drive(3650,80);
     stop_1();
-    move(0,900);
+    move(0,700);
     msleep(500);
     stop_1();
     servo(claw,claw_min,slow+1);
     stop_1();
     move(0,-600);
-    msleep(950);
+    msleep(850);
     
     
     stop_1();
@@ -181,8 +199,9 @@ int water_contain(){
 int place_block_and_go(){
     thread openc;
     openc = thread_create(claw_open);
+    stop_1();
     thread_start(openc);
-    Drive(-2750,-80);
+    Drive(-2650,-80);
 
     stop_1();
     turn_with_gyro(800,-90);
@@ -201,7 +220,7 @@ int place_block_and_go(){
         gmpc(back_claw) > -230 ? hand(back) : off(back_claw); elapsed=seconds()-start_time;}
     off(back_claw);
     move(-600,-600);
-    msleep(600);
+    msleep(800);
     move(400,400);
     msleep(400);
     stop_1();
@@ -211,6 +230,7 @@ int place_block_and_go(){
 
     back_arm_move(stop);
     off(back_port);
+    
     stop_1();
     square_up(white,800);
     thread_destroy(openc);
@@ -220,15 +240,21 @@ int place_block_and_go(){
 int block_2andstack(){
     thread lift_up1;
     lift_up1 = thread_create(lift_arm_up);
+    stop_1();
     thread_start(lift_up1);
     stop_1();
-    Drive(1400,80);
+    move(-600,600);
+    msleep(100);
     stop_1();
-    servo(claw,claw_min,slow);
+    Drive(600,80);
     stop_1();
-    servo(arm,arm_max,slow);
-    move(-500,-500);
-    msleep(450);
+    servo(claw,claw_min,fast);
+    stop_1();
+    servo(arm,arm_max,fast);
+    move(600,-600);
+    msleep(100);
+    stop_1();
+    move1("d",drive,700,80);
 
     stop_1();
     turn_with_gyro(800,90);
@@ -262,7 +288,7 @@ int delivery(){
         gmpc(back_claw) > -230 ? hand(back) : off(back_claw); }
     off(back_claw);
     move(800,800);
-    msleep(400);
+    msleep(600);
     stop_1();
     while(analog(back_bound) < 2000){
         back_arm_move(forward);   
@@ -272,16 +298,20 @@ int delivery(){
     off(back_port);
     stop_1();
     thread_start(raise);
+    stop_1();
     turn_with_gyro(800,90);
     stop_1();
     turn_with_gyro(800,90);
     stop_1();
     square_up(black,-800);
+    
+    stop_1();
     thread_start(block);
+    stop_1();
     move(450,0);
     msleep(300);
     stop_1();
-    servo(claw,claw_min + 400,slow);
+    servo(claw,claw_min + 400,2);
    servo(arm,arm_max,fast);
     
     stop_1();
@@ -302,42 +332,50 @@ int blocks_2(){
 	turn_with_gyro(800,-90);
     stop_1();
     move(-600,-600);
-    msleep(500);
+    msleep(700);
     stop_1();
-    thread_start(lower2);
+    
     turn_with_gyro(800,-90);
     stop_1();
     square_up(black,-800);
-    Drive(1350,80);
+    servo(arm,arm_min,fast);
+    servo(claw,claw_max,fast);
+    move(800,800);
+    msleep(600);
     stop_1();
-    servo(arm,arm_min+300,slow+1);
+    servo(arm,arm_min+320,slow+1);
     servo(claw,claw_min,slow);
     servo(arm,arm_min+370,slow+1);
     stop_1();
-    move1("d",drive,2800,80);
+    move1("d",drive, 3700,80);
     stop_1();
     servo(arm,arm_min+300,slow);
     servo(claw,claw_min+400,slow);
 	stop_1();
-    move1("d",drive,-2650,-80);
+    move1("d",drive,-3500,-80);
     servo(arm,arm_max,fast);
     servo(claw,claw_max,fast);
     stop_1();
     move(600,-600);
     msleep(500);
     stop_1();
-    servo(arm,arm_block-28,slow+1);
-    servo(claw,claw_min-10,slow);
+    servo(arm,arm_block-25,slow+1);
+    servo(claw,claw_min+200,slow);
+    stop_1();
+    
+    servo(claw,claw_min,slow+1);
     servo(arm,arm_block+200,fast);
+    
     stop_1();
     move(-600,600);
     msleep(500);
     stop_1();
     servo(arm,arm_min+370,slow+1);
-    move1("d",drive,1800,80);
+    move1("d",drive,2700,80);
     stop_1();
     thread_start(raise1);
     move1("d",turn,800,90);
+    stop_1();
     
     
     thread_destroy(raise1);
@@ -365,8 +403,9 @@ int delivery_2(){
     Drive(-1700,-80);
     stop_1();
     servo(arm,arm_max,fast);
+    servo(claw,claw_min,fast);
     move(-400,400);
-    msleep(700);
+    msleep(650);
     stop_1();
     move1("d",square,black,-800);
     stop_1();
@@ -393,6 +432,7 @@ int delivery_2(){
     back_arm_move(stop);
     off(back_port);
     servo(arm,arm_max,fast);
+    move1("d",square,black,800);
     stop_1();
     move1("d",turn,800,90);
     stop_1();
@@ -404,9 +444,9 @@ int delivery_2(){
     move(400,0);
     msleep(300);
     move(600,600);
-    msleep(400);
+    msleep(500);
     stop_1();
-    servo(claw,claw_min+400,slow);
+    servo(claw,claw_min+400,slow+1);
     servo(arm,arm_bigblock+200,fast);
     servo(claw,claw_min,slow);
     servo(arm,arm_max,fast);
@@ -423,7 +463,7 @@ int delivery_2(){
     move(0,800);
     msleep(1000);
     stop_1();
-    move1("d",square,black,-800);
+    
     
     
     
@@ -444,62 +484,151 @@ int water_collect(){
     thread clawC;
     	clawC = thread_create(claw_waterC);
 	stop_1();
+    servo(arm,arm_max,fast);
+    servo(claw,claw_min+420,fast);
     move1("d",square,black,-800);
     stop_1();
-    move1("d",turn,800,-45);
+    move1("d",turn,800,-90);
+    stop_1();
+    move1("d",square,black,800);
+    stop_1();
+    move1("d",turn,800,45);
     stop_1();
     move(600,-600);
-    msleep(150);
+    msleep(200);
     stop_1();
-    servo(claw,claw_max,fast);
+    //servo(claw,claw_max,fast);
     stop_1();
     
     move(-600,-600);
-    msleep(700);
+    msleep(800);
     
     stop_1();
-    servo(arm,arm_min+40,slow);
+    servo(arm,arm_min+50,fast);
+    stop_1();
     move(600,600);
-    msleep(1300);
+    msleep(550);
     stop_1();
-    servo(claw,claw_min,slow);
+    servo(claw,claw_min,slow+1);
     stop_1();
+   
+    
+    
     move(-500,-500);
-    msleep(2000);
+    msleep(500);
+   
+    move(-900,-400);
+    msleep(2800);
     stop_1();
-    move(-600,-50);
-    msleep(1900);
-    stop_1();
-    move(50,600);
-    msleep(3000);
+    move(300,900);
+    msleep(2250);
     move(800,800);
-    msleep(400);
+    msleep(100);
+    stop_1();
+    thread_start(copen3);
     stop_1();
     thread_start(arm2);
-    thread_start(copen3);
+    
     move(-1000,-1000);
-    msleep(600);
+    msleep(1000);
+    stop_1();
+    servo(arm,arm_max-150,slow+1);
+    stop_1();
     move(0,800);
     msleep(800);
-    thread_start(arm3);
+    
     move(400,400);
-    msleep(850);
+    msleep(650);
+    stop_1();
+    thread_destroy(copen3);
+     move(300,300);
+    msleep(450);
+    thread_start(arm3);
+    stop_1();
+   
     stop_1();
     thread_start(clawC);
+   
     stop_1();
-    msleep(500);
+    msleep(1350);
     servo(arm,arm_max,slow);
+    stop_1();
+    move(400,400);
+    msleep(450);
     move(-400,-400);
-    msleep(850);
+    msleep(860);
     move(600,-600);
     msleep(550);
     stop_1();
     servo(arm,arm_min+570,fast);
-    servo(claw,claw_min+400,fast);
+    stop_1();
+    
+    
+    servo(claw,claw_min+300,slow);
+    stop_1();
+    servo(arm,arm_max-150,fast);
+    move(-600,600);
+    msleep(100);
+    stop_1();
+    
+    servo(claw,claw_max,fast);
+    stop_1();
+    move(700,700);
+    msleep(1050);
+    thread_start(arm3);
+    stop_1();
+    msleep(200);
+    servo(claw,claw_min+30,slow);
+    servo(arm,arm_max-150,slow+1);
+    stop_1();
+    move(-600,-600);
+    msleep(1050);
+    move(300,-300);
+    msleep(300);
+    stop_1();
+    servo(arm,arm_min+570,slow);
+    servo(claw,claw_min+400,slow);
+    stop_1();
+    servo(arm,arm_max-150,fast);
+    servo(claw,claw_max,fast);
+    stop_1();
+    move(200,700);
+    msleep(850);
+    stop_1();
+    move(800,800);
+    msleep(200);
+    stop_1();
+   servo(arm,arm_max-288,fast);
+    servo(claw,claw_min,slow);
+    stop_1();
+    move(-800,-800);
+    msleep(200);
+    stop_1();
+    move(-200,-700);
+    msleep(860);
+    move(-600,-600);
+    msleep(400);
+    stop_1();
+    servo(arm,arm_min+570,slow);
+    servo(claw,claw_min+400,slow);
+    stop_1();
+    move(-900,-450);
+    msleep(2000);
+    stop_1();
+    servo(arm,arm_min,2);
+    servo(claw,claw_min,slow);
+    servo(arm,arm_min,fast);
+    
+    stop_1();
+    move1("d",turn,800,90);
+    stop_1();
+    move1("d",turn,800,45);
+    stop_1();
+    
     msleep(100000);
     thread_destroy(clawC);
     thread_destroy(arm3);
     thread_destroy(arm2);
-    thread_destroy(copen3);
+    
 	return 0;
 }

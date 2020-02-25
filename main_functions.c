@@ -9,7 +9,7 @@
 
 void stop_1(){
     move(0,0);
-    msleep(60);
+    msleep(30);//60
 
 }
 

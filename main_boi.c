@@ -12,7 +12,10 @@ int main()
     //turn_with_gyro(800,90);
     //diagnostics();
     starting_pos();
+    shut_down_in(119);
     extraction();
+    //water_collect();
+   
     //servo(arm,arm_bigblock,fast);
     //servo(claw,claw_min+400,fast);
     //water_collect();

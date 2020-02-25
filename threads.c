@@ -5,7 +5,7 @@
 #include <run_sections.h>
 
 void lift_arm_up(){
-    servo(arm,arm_block+100,2);
+    servo(arm,arm_block+120,fast);
 }
 void lower_arm(){
     msleep(1500);
@@ -15,7 +15,7 @@ void raise_arm(){
     servo(arm,arm_max,fast);
 }
 void big_block(){
-	servo(arm,arm_bigblock,slow+1);   
+	servo(arm,arm_bigblock-150,slow+1);   
 }
 void claw_open(){
     msleep(1275);
@@ -29,28 +29,28 @@ void lower_arm_2(){
  servo(arm,arm_min,fast);   
 }
 void claw_open2(){
-    servo(claw,claw_max,slow+1);
+    servo(claw,claw_max,fast);
 }
 void big_block2(){
     servo(arm,arm_bigblock,slow);
 }
 void arm_water(){
     msleep(400);
-    servo(arm,arm_max,fast);
+    servo(arm,arm_max,slow+1);
     
 }
 void arm_water2(){
-    servo(arm,arm_max-272,slow);
+    servo(arm,arm_max-286,slow);
 }
 void claw_waterC(){
-    servo(claw,claw_min,slow+1);
+    servo(claw,claw_min+10,slow);
 }
 void block_raise(){
     msleep(600);
     servo(arm,arm_block+70,slow);
 }
 void block_lower(){
-    msleep(100);
-    servo(arm,arm_min+358,slow);
+   
+    servo(arm,arm_min+358,slow+1);
 }
 //all thread functions for main and seperate voids and int's
